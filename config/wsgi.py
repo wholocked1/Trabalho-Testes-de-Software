@@ -1,5 +1,5 @@
 """
-WSGI config for api_faculdade project.
+WSGI config for config project. (Nome do projeto atualizado)
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "api_faculdade.settings")
+# --- ALTERAÇÃO AQUI ---
+# MUDOU DE "api_faculdade.settings" para "config.settings"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 application = get_wsgi_application()
