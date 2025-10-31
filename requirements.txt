@@ -1,0 +1,13 @@
+pymongo
+asgiref==3.8.1
+Django==5.2.7
+django-cockroachdb==5.2.0
+djangorestframework==3.15.1
+psycopg2-binary
+pytz==2024.1
+sqlparse==0.5.0
+fastapi
+uvicorn
+pymongo
+PyYAML
+python-multipart
