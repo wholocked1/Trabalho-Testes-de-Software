@@ -62,11 +62,16 @@ class Projeto(models.Model):
         AGUARDANDO_RESP_FINAL = 10, 'Esperando resposta do assessor ao relatório final'
         AGUARDANDO_ASSINATURAS = 11, 'Esperando assinaturas'
 
-    tema = models.CharField(max_length=255, blank=True, null=True)
-    tipo = models.IntegerField(choices=TipoPesquisa.choices, blank=True, null=True)
-    resumo = models.TextField(blank=True, null=True)
+    # --- CORREÇÃO APLICADA AQUI ---
+    # Campos agora são obrigatórios (removido blank=True, null=True)
+    # Isso fará o teste [EXCEÇÃO 2] passar.
+    tema = models.CharField(max_length=255)
+    tipo = models.IntegerField(choices=TipoPesquisa.choices)
+    resumo = models.TextField()
+    duracao = models.IntegerField(help_text="Duração em meses")
+    # -------------------------------
+
     palavra_chave = models.CharField(max_length=255, blank=True, null=True)
-    duracao = models.IntegerField(help_text="Duração em meses", blank=True, null=True)
     bolsa = models.CharField(max_length=10, choices=BOLSA_CHOICES, blank=True, null=True)
     pendencia = models.IntegerField(
         choices=StatusProjeto.choices,

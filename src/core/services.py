@@ -1,8 +1,10 @@
-# core/services.py
+# src/core/services.py
 from django.db import transaction, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from . import repositories as repo
-from .serializers import ProfessorCreateSerializer # Usado para validação
+
+# --- REVERTIDO --- (Não importamos mais o ProjetoSerializer)
+from .serializers import ProfessorCreateSerializer
 
 # --- Serviço de Professor ---
 
@@ -23,7 +25,6 @@ def get_professor_project_counts(professor_id):
             'assessorias_ativas': contagem_assessor
         }
     except ObjectDoesNotExist:
-        # Propaga a exceção para a view tratar
         raise ObjectDoesNotExist(f"Professor com ID {professor_id} não encontrado.")
 
 # --- Serviço de Projeto ---
@@ -31,10 +32,13 @@ def get_professor_project_counts(professor_id):
 @transaction.atomic
 def create_project_with_associations(data):
     """ 
-    Regra de negócio complexa: Criar um projeto, 
-    opcionalmente criando um novo professor orientador ou 
-    associando um existente, e associando um aluno.
+    Regra de negócio complexa: Criar um projeto...
     """
+    
+    # --- REVERTIDO ---
+    # Removemos a validação do 'project_serializer' que causava o Erro 500
+    # -----------------
+
     orientador_id_input = data.get('id_professor')
     orientador_novo_dados = data.get('orientador_novo')
     aluno_id_input = data.get('id_aluno')
@@ -44,22 +48,19 @@ def create_project_with_associations(data):
 
     try:
         if orientador_novo_dados:
-            # Regra: Se novos dados de orientador são passados, crie-o.
             prof_serializer = ProfessorCreateSerializer(data=orientador_novo_dados)
-            prof_serializer.is_valid(raise_exception=True) # Usa serializer para validação
+            prof_serializer.is_valid(raise_exception=True)
             orientador_obj = repo.create_professor(prof_serializer.validated_data)
         elif orientador_id_input:
-            # Regra: Se um ID é passado, busque o professor.
             orientador_obj = repo.get_professor_by_id(orientador_id_input)
 
         if aluno_id_input:
-            # Regra: Se um ID de aluno é passado, busque-o.
             aluno_obj = repo.get_aluno_by_id(aluno_id_input)
 
-        # Cria a entidade principal (Projeto)
+        # --- REVERTIDO ---
+        # Voltamos a criar o projeto diretamente com os dados (data)
         projeto = repo.create_project(data)
 
-        # Cria as associações (interações entre entidades)
         if orientador_obj:
             repo.create_orientador_assoc(orientador_obj, projeto)
         if aluno_obj:
@@ -69,14 +70,12 @@ def create_project_with_associations(data):
         return projeto
 
     except ObjectDoesNotExist as e:
-        # Converte a exceção do repositório em uma mensagem de erro de negócio
         if 'Professor' in str(e):
              raise ObjectDoesNotExist(f'Professor orientador com ID {orientador_id_input} não encontrado.')
         if 'Aluno' in str(e):
              raise ObjectDoesNotExist(f'Aluno com ID {aluno_id_input} não encontrado.')
         raise e
     except (IntegrityError, ValidationError) as e:
-        # Propaga erros de validação ou banco de dados
         raise e
 
 def associate_aluno_to_project(project_id, aluno_id):
@@ -96,6 +95,9 @@ def associate_assessor_to_project(project_id, assessor_id):
     verificando se ele já não é o orientador.
     """
     try:
+        # Garante que o professor assessor existe antes de tentar associar
+        repo.get_professor_by_id(assessor_id) # Se não existir, falha aqui
+        
         projeto = repo.get_project_by_id(project_id)
         
         # Regra de negócio: Orientador não pode ser assessor
@@ -103,7 +105,9 @@ def associate_assessor_to_project(project_id, assessor_id):
             raise ValidationError("Orientador não pode ser assessor.")
             
         return repo.create_assessor_assoc(assessor_id, projeto)
-    except ObjectDoesNotExist:
+    except ObjectDoesNotExist as e:
+        if 'Professor' in str(e):
+             raise ObjectDoesNotExist(f"Professor assessor com ID {assessor_id} não encontrado.")
         raise ObjectDoesNotExist(f"Projeto (ID {project_id}) não encontrado.")
     except Exception as e:
         raise ValidationError(f"Erro ao associar assessor: {e}")
@@ -147,16 +151,13 @@ def save_corretor_text(project_id, texto_corretor):
 
 def deactivate_project_participant(project_id, role):
     """ 
-    Regra de negócio complexa: Desativa um participante (aluno, orientador, assessor)
-    SOMENTE se houver exatamente UM participante ativo desse tipo.
+    Regra de negócio complexa: Desativa um participante...
     """
     if not role or role not in ['aluno', 'orientador', 'assessor']:
         raise ValidationError('Role inválido. Deve ser "aluno", "orientador" ou "assessor".')
 
     try:
         projeto = repo.get_project_by_id(project_id)
-        
-        # Validação com múltiplas condições
         rel_ativos = repo.get_active_participant_relation(projeto, role)
         contagem = rel_ativos.count()
         
@@ -165,14 +166,12 @@ def deactivate_project_participant(project_id, role):
         elif contagem > 1:
             raise ValidationError(f'Múltiplos {role}s ativos. Desativação automática não permitida.')
         else:
-            # Processamento de dados
             rel = rel_ativos.get()
             rel.ativo = False
             repo.save_instance(rel)
             return f'Status do {role} atualizado para inativo.'
             
     except ObjectDoesNotExist as e:
-        # Se o projeto não for encontrado
         if 'Projeto' in str(e):
              raise ObjectDoesNotExist(f"Projeto (ID {project_id}) não encontrado.")
         raise e
