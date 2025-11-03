@@ -13,7 +13,7 @@ def main():
     # Pega o diretório onde o manage.py está (a raiz do projeto)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     # Adiciona a pasta 'src' (que está em BASE_DIR/src) ao path
-    sys.path.insert(0, os.path.join(BASE_DIR, 'src'))
+    # sys.path.insert(0, os.path.join(BASE_DIR, 'src'))
 
     # 2. Altera o caminho dos settings
     # MUDOU DE "api_faculdade.settings" para "config.settings"

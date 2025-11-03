@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from . import repositories as repo
 
 # --- REVERTIDO --- (Não importamos mais o ProjetoSerializer)
-from .serializers import ProfessorCreateSerializer
+# 
 
 # --- Serviço de Professor ---
 
@@ -29,7 +29,7 @@ def get_professor_project_counts(professor_id):
 
 # --- Serviço de Projeto ---
 
-@transaction.atomic
+# @transaction.atomic
 def create_project_with_associations(data):
     """ 
     Regra de negócio complexa: Criar um projeto...
@@ -47,6 +47,7 @@ def create_project_with_associations(data):
     aluno_obj = None
 
     try:
+        from .serializers import ProfessorCreateSerializer
         if orientador_novo_dados:
             prof_serializer = ProfessorCreateSerializer(data=orientador_novo_dados)
             prof_serializer.is_valid(raise_exception=True)
