@@ -6,7 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 # Importe as funções que você quer testar
 from src.core.services import (
     get_professor_project_counts,
-    create_project_with_associations
+    create_project_with_associations,
+    associate_assessor_to_project
 )
 
 # --- CORREÇÃO: REMOVEMOS OS IMPORTS DOS MODELOS ---
@@ -207,3 +208,102 @@ def test_create_project_aluno_not_found(mocker):
         create_project_with_associations(fake_data)
         
     assert "Aluno com ID 999 não encontrado" in str(e.value)
+
+# --- Testes para associate_assessor_to_project ---
+
+def test_associate_assessor_success(mocker):
+    """
+    Caso de Teste 7 (Caminho Feliz):
+    Associa um assessor com sucesso.
+    """
+    # 1. ARRANGE
+    fake_project = mocker.MagicMock()
+    fake_professor = mocker.MagicMock()
+
+    # Simulamos o repositório
+    mocker.patch('src.core.services.repo.get_professor_by_id', return_value=fake_professor)
+    mocker.patch('src.core.services.repo.get_project_by_id', return_value=fake_project)
+    
+    # Simulamos a regra de negócio (não é o orientador)
+    mocker.patch('src.core.services.repo.check_if_orientador_is_assessor', return_value=False)
+    
+    # Simulamos a criação da associação
+    mock_create_assoc = mocker.patch('src.core.services.repo.create_assessor_assoc')
+
+    # 2. ACT
+    associate_assessor_to_project(project_id=1, assessor_id=2)
+
+    # 3. ASSERT
+    # Verificamos se a associação foi criada
+    mock_create_assoc.assert_called_once_with(2, fake_project)
+
+
+def test_associate_assessor_fails_if_is_orientador(mocker):
+    """
+    Caso de Teste 8 (Erro - Regra de Negócio):
+    Falha ao tentar associar um professor que já é o orientador.
+    """
+    # 1. ARRANGE
+    fake_project = mocker.MagicMock()
+    fake_professor = mocker.MagicMock()
+
+    mocker.patch('src.core.services.repo.get_professor_by_id', return_value=fake_professor)
+    mocker.patch('src.core.services.repo.get_project_by_id', return_value=fake_project)
+    
+    # Simulamos a regra de negócio (professor JÁ É o orientador)
+    mocker.patch('src.core.services.repo.check_if_orientador_is_assessor', return_value=True)
+    
+    mock_create_assoc = mocker.patch('src.core.services.repo.create_assessor_assoc')
+
+    # 2. ACT & 3. ASSERT
+    # Verificamos se a exceção correta foi levantada
+    with pytest.raises(ValidationError) as e:
+        associate_assessor_to_project(project_id=1, assessor_id=2)
+    
+    # Verificamos a mensagem de erro da regra de negócio
+    assert "Orientador não pode ser assessor" in str(e.value)
+    
+    # Verificamos que a associação NÃO foi criada
+    mock_create_assoc.assert_not_called()
+
+
+def test_associate_assessor_fails_if_professor_not_found(mocker):
+    """
+    Caso de Teste 9 (Erro):
+    Falha se o ID do professor (assessor) não for encontrado.
+    """
+    # 1. ARRANGE
+    # Simulamos o repositório falhando em encontrar o professor
+    mocker.patch(
+        'src.core.services.repo.get_professor_by_id', 
+        side_effect=ObjectDoesNotExist("Professor")
+    )
+    
+    # 2. ACT & 3. ASSERT
+    with pytest.raises(ObjectDoesNotExist) as e:
+        associate_assessor_to_project(project_id=1, assessor_id=999)
+        
+    # Verificamos a mensagem de erro personalizada do serviço
+    assert "Professor assessor com ID 999 não encontrado" in str(e.value)
+
+
+def test_associate_assessor_fails_if_project_not_found(mocker):
+    """
+    Caso de Teste 10 (Erro):
+    Falha se o ID do projeto não for encontrado.
+    """
+    # 1. ARRANGE
+    mocker.patch('src.core.services.repo.get_professor_by_id', return_value=mocker.MagicMock())
+    
+    # Simulamos o repositório falhando em encontrar o projeto
+    mocker.patch(
+        'src.core.services.repo.get_project_by_id', 
+        side_effect=ObjectDoesNotExist("Projeto")
+    )
+
+    # 2. ACT & 3. ASSERT
+    with pytest.raises(ObjectDoesNotExist) as e:
+        associate_assessor_to_project(project_id=999, assessor_id=2)
+        
+    # Verificamos a mensagem de erro personalizada do serviço
+    assert "Projeto (ID 999) não encontrado" in str(e.value)
