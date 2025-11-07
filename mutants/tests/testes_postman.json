@@ -1,0 +1,776 @@
+{
+    "info": {
+        "_postman_id": "a8f3b0e1-6d4b-4a8f-b9e3-e1c2d4f5b6a7",
+        "name": "CC8550 - Testes de API (Projeto Simulação)",
+        "description": "Coleção de testes para o projeto de Simulação e Teste de Software, focada nos requisitos do Prof. Luciano Rossi.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Requisito: 5 Operações CRUD ",
+            "item": [
+                {
+                    "name": "[CREATE] 1. Criar um novo Projeto",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 201 Created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "// Salva o ID do projeto criado para usar nos testes seguintes",
+                                    "var jsonData = pm.response.json();",
+                                    "pm.collectionVariables.set(\"new_project_id\", jsonData.id_proj);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tema\": \"Novo Projeto de Teste Postman\",\n    \"tipo\": \"TCC\",\n    \"resumo\": \"Testando a criação de um projeto via Postman.\",\n    \"palavra_chave\": \"teste, postman, api\",\n    \"duracao\": 12,\n    \"bolsa\": false,\n    \"id_professor\": \"{{prof_id}}\",\n    \"id_aluno\": \"{{aluno_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a operação CREATE do CRUD  e a regra de negócio de associação na criação."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[READ] 2. Obter o Projeto recém-criado",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "pm.test(\"O tema do projeto deve ser o que foi criado\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.tema).to.eql(\"Novo Projeto de Teste Postman\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a operação READ (detalhe) do CRUD."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[UPDATE] 3. Atualizar o Projeto (PUT)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "pm.test(\"O tema deve ser atualizado\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.tema).to.eql(\"Projeto de Teste ATUALIZADO\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tema\": \"Projeto de Teste ATUALIZADO\",\n    \"tipo\": \"TCC\",\n    \"resumo\": \"Testando a atualização de um projeto via Postman.\",\n    \"palavra_chave\": \"teste, postman, api, update\",\n    \"duracao\": 13,\n    \"bolsa\": true\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a operação UPDATE (PUT) do CRUD."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[READ] 4. Listar todos os Projetos",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "pm.test(\"A resposta deve ser uma lista (array)\", function () {",
+                                    "    pm.response.to.be.json;",
+                                    "    pm.expect(pm.response.json()).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a operação READ (lista) do CRUD."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[DELETE] 5. Deletar o Projeto",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 204 No Content\", function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a operação DELETE do CRUD."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Testa as 5 operações CRUD obrigatórias."
+        },
+        {
+            "name": "Requisito: Testes Funcionais e Regras de Negócio [cite: 39, 94]",
+            "item": [
+                {
+                    "name": "[Setup] Recriar Projeto para os testes",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.response.to.have.status(201);",
+                                    "var jsonData = pm.response.json();",
+                                    "pm.collectionVariables.set(\"new_project_id\", jsonData.id_proj);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tema\": \"Projeto para Teste de Regras\",\n    \"tipo\": \"IC\",\n    \"id_professor\": \"{{prof_id}}\",\n    \"id_aluno\": \"{{aluno_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[REGRA 1] Associar Assessor (Caminho Feliz)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id_professor\": \"{{assessor_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/associar-assessor/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                "associar-assessor",
+                                ""
+                            ]
+                        },
+                        "description": "Testa o fluxo funcional  de associar um assessor válido."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[REGRA 2] Desativar Participante (Aluno)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "pm.test(\"Mensagem de sucesso deve ser retornada\", function () {",
+                                    "    pm.expect(pm.response.json().status).to.include(\"Status do aluno atualizado para inativo\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"role\": \"aluno\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/desativar-participante/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                "desativar-participante",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a regra de negócio complexa  de desativar um participante (somente se houver 1 ativo)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[REGRA 3] Contagem de Projetos do Professor",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "pm.test(\"Deve retornar as contagens de orientações e assessorias\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('orientacoes_ativas');",
+                                    "    pm.expect(jsonData).to.have.property('assessorias_ativas');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/professores/{{prof_id}}/contagem-projetos/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "professores",
+                                "{{prof_id}}",
+                                "contagem-projetos",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a regra de negócio  de cálculo e processamento de dados."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[Cleanup] Deletar Projeto de Teste",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Testa as regras de negócio complexas  e fluxos funcionais."
+        },
+        {
+            "name": "Requisito: Consultas com Filtros [cite: 43]",
+            "item": [
+                {
+                    "name": "Listar Projetos (Filtro por Orientador)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/?orientador_id={{prof_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "orientador_id",
+                                    "value": "{{prof_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Testa a funcionalidade de consulta com filtro[cite: 43]."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Listar Projetos (Filtro por Pendência)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/?pendencia=pendente",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "pendencia",
+                                    "value": "pendente"
+                                }
+                            ]
+                        },
+                        "description": "Testa a funcionalidade de consulta com filtro[cite: 43]."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Testa as funcionalidades de consulta com filtros e ordenação[cite: 43]."
+        },
+        {
+            "name": "Requisito: Testes de Exceção [cite: 44, 119]",
+            "item": [
+                {
+                    "name": "[Setup] Recriar Projeto para os testes",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.response.to.have.status(201);",
+                                    "var jsonData = pm.response.json();",
+                                    "pm.collectionVariables.set(\"new_project_id\", jsonData.id_proj);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tema\": \"Projeto para Teste de Exceção\",\n    \"tipo\": \"IC\",\n    \"id_professor\": \"{{prof_id}}\",\n    \"id_aluno\": \"{{aluno_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[EXC 1] 404 - Professor Não Encontrado",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 404 Not Found\", function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/professores/999999/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "professores",
+                                "999999",
+                                ""
+                            ]
+                        },
+                        "description": "Testa o tratamento de exceção [cite: 44] para um recurso não encontrado (404)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[EXC 2] 400 - Regra de Negócio (Orientador não pode ser Assessor)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 400 Bad Request\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "pm.test(\"Mensagem de erro específica da regra de negócio\", function () {",
+                                    "    pm.expect(pm.response.json().error).to.include(\"Orientador não pode ser assessor\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id_professor\": \"{{prof_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/associar-assessor/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                "associar-assessor",
+                                ""
+                            ]
+                        },
+                        "description": "Testa o lançamento correto de exceção  de uma regra de negócio."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[EXC 3] 400 - Validação de Entrada (mongo_id inválido)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 400 Bad Request\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "pm.test(\"Mensagem de erro específica de validação\", function () {",
+                                    "    pm.expect(pm.response.json().error).to.include(\"inválido\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"mongo_id\": \"123456789\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/link-mongo/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                "link-mongo",
+                                ""
+                            ]
+                        },
+                        "description": "Testa a validação de entrada de dados [cite: 45] e tratamento de exceção[cite: 44]."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[EXC 4] 400 - Bad Request (Faltando body)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code deve ser 400 Bad Request\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "pm.test(\"Mensagem de erro sobre campo obrigatório\", function () {",
+                                    "    pm.expect(pm.response.json().error).to.include(\"obrigatório\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/associar-aluno/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                "associar-aluno",
+                                ""
+                            ]
+                        },
+                        "description": "Testa o tratamento de exceção [cite: 44] para dados de entrada ausentes."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[Cleanup] Deletar Projeto de Teste",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/projetos/{{new_project_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "projetos",
+                                "{{new_project_id}}",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Testa o tratamento de exceções [cite: 44] e cenários de erro."
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000/api",
+            "type": "string",
+            "description": "A URL base da sua API Django. (Ex: http://127.0.0.1:8000/api/v1)"
+        },
+        {
+            "key": "new_project_id",
+            "value": "",
+            "type": "string",
+            "description": "(Automático) Salva o ID do projeto criado para ser usado em outros testes."
+        },
+        {
+            "key": "prof_id",
+            "value": "1",
+            "type": "string",
+            "description": "(MANUAL) Coloque o ID de um Professor existente para ser o Orientador."
+        },
+        {
+            "key": "aluno_id",
+            "value": "1",
+            "type": "string",
+            "description": "(MANUAL) Coloque o ID de um Aluno existente."
+        },
+        {
+            "key": "assessor_id",
+            "value": "2",
+            "type": "string",
+            "description": "(MANUAL) Coloque o ID de um Professor existente (DIFERENTE do prof_id) para ser o Assessor."
+        }
+    ]
+}

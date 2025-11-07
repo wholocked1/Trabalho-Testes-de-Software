@@ -1,0 +1,592 @@
+{
+	"id": "f2e6db1d-5f49-4ce8-a0f2-ca721c4a7714",
+	"name": "CC8550 - Testes de API (Projeto Simulação)",
+	"timestamp": "2025-11-01T01:38:09.300Z",
+	"collection_id": "49061521-eb235958-5c7a-41e0-a2ab-29522d266a65",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 22,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-11-01T01:37:14.213Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "cc347943-a5aa-4af4-8aee-051e0f6d88eb",
+			"name": "[CREATE] 1. Criar um novo Projeto",
+			"url": "http://127.0.0.1:8000/api/projetos/",
+			"time": 4613,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status code deve ser 201 Created": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 201 Created": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4613
+			],
+			"allTests": [
+				{
+					"Status code deve ser 201 Created": true
+				}
+			]
+		},
+		{
+			"id": "21f35551-a3eb-4d56-bfae-b19b139f615c",
+			"name": "[READ] 2. Obter o Projeto recém-criado",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307239770947585/",
+			"time": 2349,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true,
+				"O tema do projeto deve ser o que foi criado": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"O tema do projeto deve ser o que foi criado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2349
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true,
+					"O tema do projeto deve ser o que foi criado": true
+				}
+			]
+		},
+		{
+			"id": "c9f6c003-0755-4875-b582-8eef35b98e34",
+			"name": "[UPDATE] 3. Atualizar o Projeto (PUT)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307239770947585/",
+			"time": 3395,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true,
+				"O tema deve ser atualizado": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"O tema deve ser atualizado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3395
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true,
+					"O tema deve ser atualizado": true
+				}
+			]
+		},
+		{
+			"id": "83a86376-c7e3-41a2-8d96-7589951d062c",
+			"name": "[READ] 4. Listar todos os Projetos",
+			"url": "http://127.0.0.1:8000/api/projetos/",
+			"time": 3238,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true,
+				"A resposta deve ser uma lista (array)": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A resposta deve ser uma lista (array)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3238
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true,
+					"A resposta deve ser uma lista (array)": true
+				}
+			]
+		},
+		{
+			"id": "9d88b479-802c-4c2a-983f-fefd713f90b2",
+			"name": "[DELETE] 5. Deletar o Projeto",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307239770947585/",
+			"time": 3754,
+			"responseCode": {
+				"code": 204,
+				"name": "No Content"
+			},
+			"tests": {
+				"Status code deve ser 204 No Content": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 204 No Content": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3754
+			],
+			"allTests": [
+				{
+					"Status code deve ser 204 No Content": true
+				}
+			]
+		},
+		{
+			"id": "84282f77-6374-4318-b437-3b8e0e521c5b",
+			"name": "[Setup] Recriar Projeto para os testes",
+			"url": "http://127.0.0.1:8000/api/projetos/",
+			"time": 4566,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				4566
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "d03bb120-7f0f-41a7-a16f-8912b39ab91d",
+			"name": "[REGRA 1] Associar Assessor (Caminho Feliz)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307297083457537/associar-assessor/",
+			"time": 2360,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2360
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true
+				}
+			]
+		},
+		{
+			"id": "48c714ca-9254-4c2d-8129-34a828f02832",
+			"name": "[REGRA 2] Desativar Participante (Aluno)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307297083457537/desativar-participante/",
+			"time": 1977,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true,
+				"Mensagem de sucesso deve ser retornada": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem de sucesso deve ser retornada": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1977
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true,
+					"Mensagem de sucesso deve ser retornada": true
+				}
+			]
+		},
+		{
+			"id": "996de7b9-11d8-4831-8391-8bbc2521a41d",
+			"name": "[REGRA 3] Contagem de Projetos do Professor",
+			"url": "http://127.0.0.1:8000/api/professores/3937/contagem-projetos/",
+			"time": 1731,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true,
+				"Deve retornar as contagens de orientações e assessorias": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar as contagens de orientações e assessorias": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1731
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true,
+					"Deve retornar as contagens de orientações e assessorias": true
+				}
+			]
+		},
+		{
+			"id": "9a85bbc6-62d6-4c3c-922b-c7308bf70b17",
+			"name": "[Cleanup] Deletar Projeto de Teste",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307297083457537/",
+			"time": 4428,
+			"responseCode": {
+				"code": 204,
+				"name": "No Content"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				4428
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "a3790966-ec23-4a10-9d75-83ffdbc56f7c",
+			"name": "Listar Projetos (Filtro por Orientador)",
+			"url": "http://127.0.0.1:8000/api/projetos/?orientador_id=3937",
+			"time": 3555,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3555
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true
+				}
+			]
+		},
+		{
+			"id": "764e6f3b-9725-4fe0-8fe9-369612244e36",
+			"name": "Listar Projetos (Filtro por Pendência)",
+			"url": "http://127.0.0.1:8000/api/projetos/?pendencia=pendente",
+			"time": 2818,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser 200 OK": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 200 OK": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2818
+			],
+			"allTests": [
+				{
+					"Status code deve ser 200 OK": true
+				}
+			]
+		},
+		{
+			"id": "3a7c1222-f5ec-4f3a-a322-10fff2fb2aed",
+			"name": "[Setup] Recriar Projeto para os testes",
+			"url": "http://127.0.0.1:8000/api/projetos/",
+			"time": 5800,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				5800
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "d8435493-6f80-41da-909d-3149c8f80075",
+			"name": "[EXC 1] 404 - Professor Não Encontrado",
+			"url": "http://127.0.0.1:8000/api/professores/999999/",
+			"time": 1506,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status code deve ser 404 Not Found": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 404 Not Found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1506
+			],
+			"allTests": [
+				{
+					"Status code deve ser 404 Not Found": true
+				}
+			]
+		},
+		{
+			"id": "b9e749a5-228a-4499-99fd-bc7425a693a0",
+			"name": "[EXC 2] 400 - Regra de Negócio (Orientador não pode ser Assessor)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307370228023297/associar-assessor/",
+			"time": 2214,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser 400 Bad Request": true,
+				"Mensagem de erro específica da regra de negócio": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 400 Bad Request": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem de erro específica da regra de negócio": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2214
+			],
+			"allTests": [
+				{
+					"Status code deve ser 400 Bad Request": true,
+					"Mensagem de erro específica da regra de negócio": true
+				}
+			]
+		},
+		{
+			"id": "e5d12c93-9c7c-49dd-9ec7-d95d734588e9",
+			"name": "[EXC 3] 400 - Validação de Entrada (mongo_id inválido)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307370228023297/link-mongo/",
+			"time": 4,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser 400 Bad Request": true,
+				"Mensagem de erro específica de validação": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 400 Bad Request": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem de erro específica de validação": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code deve ser 400 Bad Request": true,
+					"Mensagem de erro específica de validação": true
+				}
+			]
+		},
+		{
+			"id": "baa81af7-13f2-4732-af2a-ab262120bcf1",
+			"name": "[EXC 4] 400 - Bad Request (Faltando body)",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307370228023297/associar-aluno/",
+			"time": 4,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser 400 Bad Request": true,
+				"Mensagem de erro sobre campo obrigatório": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser 400 Bad Request": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem de erro sobre campo obrigatório": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code deve ser 400 Bad Request": true,
+					"Mensagem de erro sobre campo obrigatório": true
+				}
+			]
+		},
+		{
+			"id": "615daa5f-96c2-4dc3-876a-84cd1eed0e7f",
+			"name": "[Cleanup] Deletar Projeto de Teste",
+			"url": "http://127.0.0.1:8000/api/projetos/1120307370228023297/",
+			"time": 3886,
+			"responseCode": {
+				"code": 204,
+				"name": "No Content"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				3886
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 52198,
+	"collection": {
+		"requests": [
+			{
+				"id": "cc347943-a5aa-4af4-8aee-051e0f6d88eb",
+				"method": "POST"
+			},
+			{
+				"id": "21f35551-a3eb-4d56-bfae-b19b139f615c",
+				"method": "GET"
+			},
+			{
+				"id": "c9f6c003-0755-4875-b582-8eef35b98e34",
+				"method": "PATCH"
+			},
+			{
+				"id": "83a86376-c7e3-41a2-8d96-7589951d062c",
+				"method": "GET"
+			},
+			{
+				"id": "9d88b479-802c-4c2a-983f-fefd713f90b2",
+				"method": "DELETE"
+			},
+			{
+				"id": "84282f77-6374-4318-b437-3b8e0e521c5b",
+				"method": "POST"
+			},
+			{
+				"id": "d03bb120-7f0f-41a7-a16f-8912b39ab91d",
+				"method": "POST"
+			},
+			{
+				"id": "48c714ca-9254-4c2d-8129-34a828f02832",
+				"method": "POST"
+			},
+			{
+				"id": "996de7b9-11d8-4831-8391-8bbc2521a41d",
+				"method": "GET"
+			},
+			{
+				"id": "9a85bbc6-62d6-4c3c-922b-c7308bf70b17",
+				"method": "DELETE"
+			},
+			{
+				"id": "a3790966-ec23-4a10-9d75-83ffdbc56f7c",
+				"method": "GET"
+			},
+			{
+				"id": "764e6f3b-9725-4fe0-8fe9-369612244e36",
+				"method": "GET"
+			},
+			{
+				"id": "3a7c1222-f5ec-4f3a-a322-10fff2fb2aed",
+				"method": "POST"
+			},
+			{
+				"id": "d8435493-6f80-41da-909d-3149c8f80075",
+				"method": "GET"
+			},
+			{
+				"id": "b9e749a5-228a-4499-99fd-bc7425a693a0",
+				"method": "POST"
+			},
+			{
+				"id": "e5d12c93-9c7c-49dd-9ec7-d95d734588e9",
+				"method": "POST"
+			},
+			{
+				"id": "baa81af7-13f2-4732-af2a-ab262120bcf1",
+				"method": "POST"
+			},
+			{
+				"id": "615daa5f-96c2-4dc3-876a-84cd1eed0e7f",
+				"method": "DELETE"
+			}
+		]
+	}
+}
