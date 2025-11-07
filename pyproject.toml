@@ -1,0 +1,4 @@
+[tool.mutmut]
+runner = "python3 -m pytest -x --create-db --import-mode=importlib -p no:cov --strict-collection"
+paths_to_mutate = "src/"
+tests_dir = "tests/"

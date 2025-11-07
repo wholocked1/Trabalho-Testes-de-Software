@@ -65,10 +65,10 @@ class Projeto(models.Model):
     # --- CORREÇÃO APLICADA AQUI ---
     # Campos agora são obrigatórios (removido blank=True, null=True)
     # Isso fará o teste [EXCEÇÃO 2] passar.
-    tema = models.CharField(max_length=255)
-    tipo = models.IntegerField(choices=TipoPesquisa.choices)
-    resumo = models.TextField()
-    duracao = models.IntegerField(help_text="Duração em meses")
+    tema = models.CharField(max_length=255, default='')
+    tipo = models.IntegerField(choices=TipoPesquisa.choices, default=1)
+    resumo = models.TextField(default='')
+    duracao = models.IntegerField(help_text="Duração em meses", default=12)
     # -------------------------------
 
     palavra_chave = models.CharField(max_length=255, blank=True, null=True)
