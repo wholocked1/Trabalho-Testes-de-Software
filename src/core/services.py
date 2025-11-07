@@ -1,7 +1,7 @@
 # src/core/services.py
 from django.db import transaction, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from . import repositories as repo
+# from . import repositories as repo # <-- REMOVIDO DO TOPO
 
 # --- REVERTIDO --- (Não importamos mais o ProjetoSerializer)
 # 
@@ -13,6 +13,7 @@ def get_professor_project_counts(professor_id):
     Regra de negócio: Calcular contagens de projetos ativos 
     para um professor.
     """
+    from . import repositories as repo # <-- IMPORT AQUI
     try:
         professor = repo.get_professor_by_id(professor_id)
         contagem_orientador = repo.get_active_orientador_count(professor)
@@ -34,9 +35,10 @@ def create_project_with_associations(data):
     """ 
     Regra de negócio complexa: Criar um projeto...
     """
+    from . import repositories as repo # <-- IMPORT AQUI
     
     # --- REVERTIDO ---
-    # Removemos a validação do 'project_serializer' que causava o Erro 500
+    # ...
     # -----------------
 
     orientador_id_input = data.get('id_professor')
@@ -58,9 +60,22 @@ def create_project_with_associations(data):
         if aluno_id_input:
             aluno_obj = repo.get_aluno_by_id(aluno_id_input)
 
-        # --- REVERTIDO ---
-        # Voltamos a criar o projeto diretamente com os dados (data)
-        projeto = repo.create_project(data)
+        # --- CORREÇÃO DO "SUSPEITO 1" AQUI ---
+        # Filtra o dicionário 'data' para conter apenas 
+        # os campos que o modelo 'Projeto' realmente possui.
+        
+        # Crie uma cópia para não modificar o 'data' original
+        projeto_data = data.copy()
+        
+        # Remova as chaves que NÃO pertencem ao modelo Projeto
+        projeto_data.pop('id_professor', None)
+        projeto_data.pop('id_aluno', None)
+        projeto_data.pop('orientador_novo', None)
+        # Adicione outros .pop() se houver mais campos que não são do Projeto
+
+        # Agora criamos o projeto apenas com os dados relevantes
+        projeto = repo.create_project(projeto_data)
+        # --- FIM DA CORREÇÃO ---
 
         if orientador_obj:
             repo.create_orientador_assoc(orientador_obj, projeto)
@@ -81,6 +96,7 @@ def create_project_with_associations(data):
 
 def associate_aluno_to_project(project_id, aluno_id):
     """ Associa um aluno a um projeto. """
+    from . import repositories as repo # <-- IMPORT AQUI
     try:
         projeto = repo.get_project_by_id(project_id)
         aluno = repo.get_aluno_by_id(aluno_id)
@@ -95,6 +111,7 @@ def associate_assessor_to_project(project_id, assessor_id):
     Regra de negócio: Associa um assessor, 
     verificando se ele já não é o orientador.
     """
+    from . import repositories as repo # <-- IMPORT AQUI
     try:
         # Garante que o professor assessor existe antes de tentar associar
         repo.get_professor_by_id(assessor_id) # Se não existir, falha aqui
@@ -115,6 +132,7 @@ def associate_assessor_to_project(project_id, assessor_id):
 
 def associate_orientador_to_project(project_id, orientador_id):
     """ Associa um orientador a um projeto. """
+    from . import repositories as repo # <-- IMPORT AQUI
     try:
         projeto = repo.get_project_by_id(project_id)
         professor = repo.get_professor_by_id(orientador_id)
@@ -128,6 +146,7 @@ def associate_orientador_to_project(project_id, orientador_id):
 
 def link_mongo_to_project(project_id, mongo_id_str):
     """ Valida e salva um Mongo ID em um projeto. """
+    from . import repositories as repo # <-- IMPORT AQUI
     if not mongo_id_str or len(mongo_id_str) != 24:
         raise ValidationError('"mongo_id" inválido. Deve ter 24 caracteres.')
         
@@ -140,6 +159,7 @@ def link_mongo_to_project(project_id, mongo_id_str):
 
 def save_corretor_text(project_id, texto_corretor):
     """ Salva o texto do 'melhor_corretor' no projeto. """
+    from . import repositories as repo # <-- IMPORT AQUI
     if texto_corretor is None:
         raise ValidationError('O campo "texto_corretor" é obrigatório.')
         
@@ -154,6 +174,7 @@ def deactivate_project_participant(project_id, role):
     """ 
     Regra de negócio complexa: Desativa um participante...
     """
+    from . import repositories as repo # <-- IMPORT AQUI
     if not role or role not in ['aluno', 'orientador', 'assessor']:
         raise ValidationError('Role inválido. Deve ser "aluno", "orientador" ou "assessor".')
 
