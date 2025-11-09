@@ -1,0 +1,11 @@
+[cosmic-ray]
+module-path = "src/core"        # caminho para seu app Django
+timeout = 60
+excluded-modules = ["tests"]    # evita mutar pastas de testes
+test-command = "env DJANGO_SETTINGS_MODULE=config.settings pytest --ds=config.settings -q --disable-warnings"
+
+[cosmic-ray.cloning]
+method = "copy"
+
+[cosmic-ray.distributor]
+name = "local"  # ou "multiprocessing" para usar múltiplos núcleos
