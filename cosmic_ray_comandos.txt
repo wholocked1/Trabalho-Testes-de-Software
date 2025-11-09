@@ -1,0 +1,5 @@
+Seguir ordem:
+Baixar o cosmic_ray: pip install cosmic-ray pytest
+Se o arquivo cosmic_ray_db.sqlite não existir: cosmic-ray init cosmic-ray.toml cosmic_ray_db.sqlite
+Para rodar os testes: cosmic-ray exec cosmic-ray.toml cosmic_ray_db.sqlite
+Para gerar o report: cr-html cosmic_ray_db.sqlite > report.html
