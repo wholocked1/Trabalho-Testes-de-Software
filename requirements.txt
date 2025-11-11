@@ -13,4 +13,6 @@ pytest-cov
 pytest-mock
 
 # Testes de Mutação
-mutmut
+# mutmut (Requisito original, incompatível com Windows)
+# cosmic-ray (Alternativa utilizada)
+cosmic-ray
